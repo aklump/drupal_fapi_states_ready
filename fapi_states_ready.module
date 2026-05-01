@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * FAPI States Ready module.
+ */
+
+/**
+ * Implements hook_page_attachments().
+ */
+function fapi_states_ready_page_attachments(array &$attachments) {
+  $attachments['#attached']['library'][] = 'fapi_states_ready/watcher';
+
+  $attachments['#attached']['html_head'][] = [
+    [
+      '#tag' => 'script',
+      '#value' => 'document.documentElement.classList.add("fapi-states-loading");',
+    ],
+    'fapi_states_ready_loading_class',
+  ];
+}

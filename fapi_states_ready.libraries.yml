@@ -1,0 +1,10 @@
+watcher:
+  js:
+    js/fapi-states-ready.js: {}
+  css:
+    theme:
+      css/fapi-states-ready.css: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.states

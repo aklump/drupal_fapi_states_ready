@@ -1,0 +1,95 @@
+.hide-until-fapi-states-ready {
+  visibility: hidden;
+}
+
+.disable-until-fapi-states-ready {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.fade-until-fapi-states-ready {
+  opacity: 0.35;
+  filter: blur(1px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.shimmer-until-fapi-states-ready {
+  position: relative;
+  color: transparent;
+  border-color: transparent;
+  background-color: var(--fapi-states-ready-shimmer-base, #f2f2f2);
+  background-image: linear-gradient(
+    90deg,
+    var(--fapi-states-ready-shimmer-base, #f2f2f2) 25%,
+    var(--fapi-states-ready-shimmer-highlight, #fafafa) 37%,
+    var(--fapi-states-ready-shimmer-base, #f2f2f2) 63%
+  );
+  background-position: 100% 50%;
+  background-repeat: no-repeat;
+  background-size: 400% 100%;
+  text-shadow: none;
+  text-decoration-color: transparent;
+  outline-color: transparent;
+  animation: fapi-states-ready-shimmer var(--fapi-states-ready-shimmer-speed, 2s) ease infinite;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Match common Drupal/admin theme fieldset specificity without using !important. */
+fieldset.shimmer-until-fapi-states-ready:not(.fieldgroup) {
+  border-radius: var(--fapi-states-ready-shimmer-radius, 4px);
+}
+
+/**
+ * The loading classes are removed by JavaScript as soon as FAPI states are
+ * ready. Because these selectors exist only during that short loading window,
+ * using !important here is acceptable and intentional.
+ *
+ * We need !important because Drupal core and admin themes may use highly
+ * specific selectors for form widgets, especially autocomplete fields, e.g.
+ * `.js input.form-autocomplete`. Those rules can otherwise override the
+ * shimmer background or reveal widget-specific background images while the
+ * field is supposed to be masked.
+ *
+ * Do not copy this pattern to normal theme styling. This is only for temporary
+ * pre-states masking, where the class is removed once the form is ready.
+ */
+.js input.shimmer-until-fapi-states-ready,
+.js textarea.shimmer-until-fapi-states-ready,
+.js select.shimmer-until-fapi-states-ready,
+.js .shimmer-until-fapi-states-ready.form-autocomplete {
+  color: transparent !important;
+  border-color: transparent !important;
+  background-color: var(--fapi-states-ready-shimmer-base, #f2f2f2) !important;
+  background-image: linear-gradient(
+    90deg,
+    var(--fapi-states-ready-shimmer-base, #f2f2f2) 25%,
+    var(--fapi-states-ready-shimmer-highlight, #fafafa) 37%,
+    var(--fapi-states-ready-shimmer-base, #f2f2f2) 63%
+  ) !important;
+  background-position: 100% 50% !important;
+  background-repeat: no-repeat !important;
+  background-size: 400% 100% !important;
+}
+
+.shimmer-until-fapi-states-ready *,
+.shimmer-until-fapi-states-ready *::before,
+.shimmer-until-fapi-states-ready *::after {
+  visibility: hidden;
+}
+
+.shimmer-until-fapi-states-ready input::placeholder,
+.shimmer-until-fapi-states-ready textarea::placeholder {
+  color: transparent !important;
+}
+
+@keyframes fapi-states-ready-shimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0 50%;
+  }
+}

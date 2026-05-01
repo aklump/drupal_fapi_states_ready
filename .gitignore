@@ -1,0 +1,6 @@
+/vendor/
+.idea/
+knowledge/
+MARKET.md
+.web_package
+bind_book.sh
