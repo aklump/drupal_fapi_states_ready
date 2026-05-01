@@ -27,7 +27,7 @@ Because this is an unpublished, custom Drupal extension, the way you install and
 ### A. Install Standalone
 * Require _fapi_states_ready_ at the **root-level**.
     ```
-    composer require aklump_drupal/fapi_states_ready:@dev
+    composer require aklump_drupal/fapi_states_ready:^0.0
     ```
 ---
 ### B. Depend on This Extension
@@ -43,7 +43,7 @@ Because this is an unpublished, custom Drupal extension, the way you install and
     ```
 * From the depending module (or theme) directory run:
     ```
-    composer require aklump_drupal/fapi_states_ready:@dev --no-update
+    composer require aklump_drupal/fapi_states_ready:^0.0 --no-update
     ```
 
 * Add the following to _my_module.info.yml_ in the `dependencies` array:
