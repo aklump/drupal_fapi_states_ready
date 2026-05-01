@@ -6,61 +6,28 @@
  */
 
 /**
- * Implements hook_preprocess_html().
+ * Adds the watcher library as a dependency of Drupal's states library.
+ *
+ * This module intentionally does not attach its JavaScript globally with
+ * hook_page_attachments(). Instead, it alters the core/drupal.states library so
+ * that the watcher library is only loaded on pages, forms, or AJAX responses
+ * where Drupal's FAPI states system is already being used.
+ *
+ * This keeps the asset loading strategy narrow:
+ * - Pages without #states do not load this module's watcher library.
+ * - Pages with #states automatically get the watcher whenever
+ *   core/drupal.states is attached.
+ * - AJAX responses that attach core/drupal.states also receive the watcher.
+ *
+ * The watcher JavaScript still performs a lightweight context check before
+ * doing any DOM work. That is intentional: Drupal behaviors can be attached
+ * repeatedly during AJAX requests, and not every attach context necessarily
+ * contains elements with data-drupal-states.
+ *
+ * Implements hook_library_info_alter().
  */
-function fapi_states_ready_preprocess_html(&$variables) {
-  $assets = \Drupal::service('asset.resolver')->getAttachedAssets(\Drupal::routeMatch());
-  $libraries = $assets->getLibraries();
-
-  $library_discovery = \Drupal::service('library.discovery');
-  $has_states = FALSE;
-  $checked_libraries = [];
-
-  $check_dependencies = function ($library_name) use ($library_discovery, &$check_dependencies, &$checked_libraries) {
-    if (isset($checked_libraries[$library_name])) {
-      return $checked_libraries[$library_name];
-    }
-
-    if ($library_name === 'core/drupal.states') {
-      return $checked_libraries[$library_name] = TRUE;
-    }
-
-    $parts = explode('/', $library_name, 2);
-    $extension = $parts[0];
-    $name = isset($parts[1]) ? $parts[1] : NULL;
-
-    if (NULL === $name) {
-      return $checked_libraries[$library_name] = FALSE;
-    }
-
-    $definition = $library_discovery->getLibraryByName($extension, $name);
-
-    if (!empty($definition['dependencies'])) {
-      foreach ($definition['dependencies'] as $dependency) {
-        if ($check_dependencies($dependency)) {
-          return $checked_libraries[$library_name] = TRUE;
-        }
-      }
-    }
-
-    return $checked_libraries[$library_name] = FALSE;
-  };
-
-  foreach ($libraries as $library) {
-    if ($check_dependencies($library)) {
-      $has_states = TRUE;
-      break;
-    }
+function fapi_states_ready_library_info_alter(array &$libraries, $extension) {
+  if ($extension === 'core' && isset($libraries['drupal.states'])) {
+    $libraries['drupal.states']['dependencies'][] = 'fapi_states_ready/watcher';
   }
-
-  if ($has_states) {
-    $variables['html_attributes']->addClass('fapi-states-loading');
-  }
-}
-
-/**
- * Implements hook_page_attachments().
- */
-function fapi_states_ready_page_attachments(array &$attachments) {
-  $attachments['#attached']['library'][] = 'fapi_states_ready/watcher';
 }

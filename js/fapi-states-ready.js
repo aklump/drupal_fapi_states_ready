@@ -28,7 +28,7 @@
 
   function hasStateElements(context) {
     return (
-      context.matches?.('[data-drupal-states]') ||
+      (context.matches && context.matches('[data-drupal-states]')) ||
       !!context.querySelector('[data-drupal-states]')
     );
   }
@@ -41,6 +41,12 @@
 
   Drupal.behaviors.fapiStatesReady = {
     attach: function (context) {
+      // This library is loaded as a dependency of core/drupal.states, so it is
+      // only present when Drupal's states system has been attached. However,
+      // behaviors may run repeatedly for AJAX fragments, and a later attach
+      // context may not itself contain any states elements. Keep this cheap
+      // guard so unrelated AJAX attaches do not schedule rendering callbacks or
+      // scan for classes unnecessarily.
       if (!hasStateElements(context)) {
         return;
       }
