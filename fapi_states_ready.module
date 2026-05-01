@@ -6,16 +6,61 @@
  */
 
 /**
+ * Implements hook_preprocess_html().
+ */
+function fapi_states_ready_preprocess_html(&$variables) {
+  $assets = \Drupal::service('asset.resolver')->getAttachedAssets(\Drupal::routeMatch());
+  $libraries = $assets->getLibraries();
+
+  $library_discovery = \Drupal::service('library.discovery');
+  $has_states = FALSE;
+  $checked_libraries = [];
+
+  $check_dependencies = function ($library_name) use ($library_discovery, &$check_dependencies, &$checked_libraries) {
+    if (isset($checked_libraries[$library_name])) {
+      return $checked_libraries[$library_name];
+    }
+
+    if ($library_name === 'core/drupal.states') {
+      return $checked_libraries[$library_name] = TRUE;
+    }
+
+    $parts = explode('/', $library_name, 2);
+    $extension = $parts[0];
+    $name = isset($parts[1]) ? $parts[1] : NULL;
+
+    if (NULL === $name) {
+      return $checked_libraries[$library_name] = FALSE;
+    }
+
+    $definition = $library_discovery->getLibraryByName($extension, $name);
+
+    if (!empty($definition['dependencies'])) {
+      foreach ($definition['dependencies'] as $dependency) {
+        if ($check_dependencies($dependency)) {
+          return $checked_libraries[$library_name] = TRUE;
+        }
+      }
+    }
+
+    return $checked_libraries[$library_name] = FALSE;
+  };
+
+  foreach ($libraries as $library) {
+    if ($check_dependencies($library)) {
+      $has_states = TRUE;
+      break;
+    }
+  }
+
+  if ($has_states) {
+    $variables['html_attributes']->addClass('fapi-states-loading');
+  }
+}
+
+/**
  * Implements hook_page_attachments().
  */
 function fapi_states_ready_page_attachments(array &$attachments) {
   $attachments['#attached']['library'][] = 'fapi_states_ready/watcher';
-
-  $attachments['#attached']['html_head'][] = [
-    [
-      '#tag' => 'script',
-      '#value' => 'document.documentElement.classList.add("fapi-states-loading");',
-    ],
-    'fapi_states_ready_loading_class',
-  ];
 }

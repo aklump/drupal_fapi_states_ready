@@ -1,10 +1,6 @@
 (function (Drupal) {
   'use strict';
 
-  function markLoading() {
-    document.documentElement.classList.add('fapi-states-loading');
-    document.documentElement.classList.remove('fapi-states-ready');
-  }
 
   function removeUntilReadyClasses(context) {
     var elements = context.querySelectorAll('[class*="-until-fapi-states-ready"]');
@@ -31,7 +27,10 @@
   }
 
   function hasStateElements(context) {
-    return !!context.querySelector('[data-drupal-states]');
+    return (
+      context.matches?.('[data-drupal-states]') ||
+      !!context.querySelector('[data-drupal-states]')
+    );
   }
 
   function afterStatesHaveRendered(callback) {
@@ -45,8 +44,6 @@
       if (!hasStateElements(context)) {
         return;
       }
-
-      markLoading();
 
       afterStatesHaveRendered(function () {
         markReady(context);
