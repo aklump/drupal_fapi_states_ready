@@ -174,7 +174,7 @@ These can also be scoped to a component:
 
 ## Behavior
 
-1. Adds `fapi-states-loading` to `<html>` as early as possible.
+1. Informs Drupal to add `fapi-states-loading` to `<html>` via `hook_preprocess_html` if `core/drupal.states` is present.
 2. Loads after Drupal’s states library.
 3. Waits briefly for states-driven DOM changes to render.
 4. Removes `fapi-states-loading` from `<html>`.
