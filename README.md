@@ -2,7 +2,7 @@
 
 ## Summary
 
-Adds temporary loading classes for Drupal forms that use FAPI `#states`, then removes those classes once states have had time to render.
+Eliminates the "flash of unready state" (FOUS) by temporarily masking Drupal FAPI elements until their `#states` have fully rendered.
 
 This helps prevent users from seeing incorrect initial form state before Drupal’s states JavaScript has applied visibility, disabled, required, or other state-driven behavior.
 
@@ -172,11 +172,17 @@ These can also be scoped to a component:
 }
 ```
 
+## Optional `<html>` Loading Class
+
+Consuming projects or themes may add `fapi-states-loading` to the `<html>` element server-side (e.g., via `hook_preprocess_html`) if a global, no-flash loading state is required.
+
+- This module **does not** automatically add that class.
+- This module **will remove** `fapi-states-loading` from `<html>` once FAPI states are ready.
+
 ## Behavior
 
-1. Informs Drupal to add `fapi-states-loading` to `<html>` via `hook_preprocess_html` if `core/drupal.states` is present.
-2. Loads after Drupal’s states library.
-3. Waits briefly for states-driven DOM changes to render.
-4. Removes `fapi-states-loading` from `<html>`.
-5. Adds `fapi-states-ready` to `<html>`.
-6. Removes all classes ending with `-until-fapi-states-ready`.
+1. Watcher library is loaded as a dependency of Drupal’s `core/drupal.states`.
+2. Watcher only runs when the current attach context contains elements with `data-drupal-states`.
+3. It waits briefly for states-driven DOM changes to render.
+4. It removes `fapi-states-loading` from `<html>` if present.
+5. It removes all classes ending with `-until-fapi-states-ready`.

@@ -1,6 +1,6 @@
 {
   "name": "aklump_drupal/fapi_states_ready",
-  "description": "Adds html classes when Drupal FAPI states have finished processing.",
+  "description": "Eliminates the 'flash of unready state' (FOUS) by temporarily masking Drupal FAPI elements until their #states have fully rendered.",
   "type": "drupal-module",
   "authors": [
     {

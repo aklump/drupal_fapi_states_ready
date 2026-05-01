@@ -1,6 +1,6 @@
 name: 'FAPI States Ready'
 type: module
-description: 'Adds html classes when Drupal FAPI states have finished processing.'
+description: "Eliminates the 'flash of unready state' (FOUS) by temporarily masking Drupal FAPI elements until their #states have fully rendered."
 core_version_requirement: '^9 || ^10'
 package: Custom
 dependencies:

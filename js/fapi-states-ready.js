@@ -23,7 +23,6 @@
   function markReady(context) {
     removeUntilReadyClasses(context || document);
     document.documentElement.classList.remove('fapi-states-loading');
-    document.documentElement.classList.add('fapi-states-ready');
   }
 
   function hasStateElements(context) {
