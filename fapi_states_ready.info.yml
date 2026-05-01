@@ -1,7 +1,8 @@
-name: FAPI States Ready
+name: 'FAPI States Ready'
 type: module
-description: Adds html classes when Drupal FAPI states have finished processing.
-core_version_requirement: ^9 || ^10
+description: 'Adds html classes when Drupal FAPI states have finished processing.'
+core_version_requirement: '^9 || ^10'
 package: Custom
 dependencies:
-  - drupal:system
+    - 'drupal:system'
+version: 0.0.1
