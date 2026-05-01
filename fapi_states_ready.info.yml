@@ -5,4 +5,4 @@ core_version_requirement: '^9 || ^10'
 package: Custom
 dependencies:
     - 'drupal:system'
-version: 0.0.2
+version: 0.0.3
