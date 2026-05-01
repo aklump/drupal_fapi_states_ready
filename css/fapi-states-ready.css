@@ -1,13 +1,17 @@
-.hide-until-fapi-states-ready {
+.invisible-until-fapi-states-ready {
   visibility: hidden;
 }
 
-.disable-until-fapi-states-ready {
+.hidden-until-fapi-states-ready {
+  display: none;
+}
+
+.disabled-until-fapi-states-ready {
   pointer-events: none;
   opacity: 0.6;
 }
 
-.fade-until-fapi-states-ready {
+.faded-until-fapi-states-ready {
   opacity: 0.35;
   filter: blur(1px);
   pointer-events: none;

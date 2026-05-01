@@ -64,13 +64,15 @@ Because this is an unpublished, custom Drupal extension, the way you install and
 
 ## Quick Start
 
+Add a `*-until-fapi-states-ready` class to temporarily mask an element until Drupal FAPI `#states` have rendered; the class is automatically removed once states are ready.
+
 Add one of the provided classes to any FAPI element that should be treated as loading until states are ready.
 
 ```php
 $form['my_element'] = [
   '#type' => 'container',
   '#attributes' => [
-    'class' => ['hide-until-fapi-states-ready'],
+    'class' => ['invisible-until-fapi-states-ready'],
   ],
   '#states' => [
     'visible' => [
@@ -82,52 +84,17 @@ $form['my_element'] = [
 
 ## Built-in Treatments
 
-| Class                             | Treatment                                                              |
-|-----------------------------------|------------------------------------------------------------------------|
-| `hide-until-fapi-states-ready`    | Hides the element until states are ready.                              |
-| `disable-until-fapi-states-ready` | Shows the element, but makes it temporarily non-interactive and muted. |
-| `fade-until-fapi-states-ready`    | Shows the element in a faded/loading state.                            |
-| `shimmer-until-fapi-states-ready` | Shows a skeleton-style shimmer placeholder.                            |
+| Class | CSS behavior | Layout space reserved? |
+|---|---:|---:|
+| `invisible-until-fapi-states-ready` | `visibility: hidden` | Yes |
+| `hidden-until-fapi-states-ready` | `display: none` | No |
+| `disabled-until-fapi-states-ready` | `pointer-events: none; opacity: 0.6` | Yes |
+| `faded-until-fapi-states-ready` | visual fade/blur | Yes |
+| `shimmer-until-fapi-states-ready` | skeleton/loading shimmer | Yes |
 
 ## Examples
 
-### Hide until ready
-
-```php
-$form['submit'] = [
-  '#type' => 'submit',
-  '#value' => t('Save'),
-  '#attributes' => [
-    'class' => ['hide-until-fapi-states-ready'],
-  ],
-];
-```
-
-### Disable until ready
-
-```
-$form['submit'] = [
-  '#type' => 'submit',
-  '#value' => t('Save'),
-  '#attributes' => [
-    'class' => ['disable-until-fapi-states-ready'],
-  ],
-];
-```
-
-### Fade until ready
-
-```php
-$form['dependent_fields'] = [
-  '#type' => 'fieldset',
-  '#title' => t('Dependent fields'),
-  '#attributes' => [
-    'class' => ['fade-until-fapi-states-ready'],
-  ],
-];
-```
-
-### Shimmer until ready
+Add one of the provided classes to any FAPI element. When states are ready, the class is removed and normal styling resumes.
 
 ```php
 $form['lookup'] = [
@@ -213,13 +180,3 @@ These can also be scoped to a component:
 4. Removes `fapi-states-loading` from `<html>`.
 5. Adds `fapi-states-ready` to `<html>`.
 6. Removes all classes ending with `-until-fapi-states-ready`.
-
-## Notes
-
-- The treatment classes are temporary.
-- The module does not require configuration.
-- Pages without FAPI states are effectively unaffected.
-- Use `hide-until-fapi-states-ready` when incorrect initial visibility would be confusing.
-- Use `disable-until-fapi-states-ready` when the element should remain visible but not usable.
-- Use `fade-until-fapi-states-ready` for subtle loading feedback.
-- Use `shimmer-until-fapi-states-ready` for skeleton-loading UI.
